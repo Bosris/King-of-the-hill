@@ -1,0 +1,101 @@
+@import url("https://fonts.googleapis.com/css?family=Crimson+Text&display=swap");
+
+* {
+  font-family: "Crimson Text";
+}
+
+.container-main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.container-main h3 {
+  width: auto;
+}
+.container-innerchat p {
+  padding: 20px;
+  border-top: 1px solid black;
+}
+
+.container-innerchat {
+  overflow: auto;
+}
+.container-chat {
+  display: flex;
+  border: 1px solid black;
+  flex-direction: column;
+  width: 30%;
+  align-items: center;
+  height: 653.31px;
+}
+.container-king {
+  display: flex;
+  width: 35%;
+  flex-direction: column;
+  border: 1px solid black;
+  align-items: center;
+}
+
+.container-choose-fighter {
+  display: flex;
+  width: 29%;
+  flex-direction: column;
+  border: 1px solid black;
+  align-items: center;
+  overflow: auto;
+}
+.container-character-create {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  border: 1px solid black;
+  align-items: center;
+}
+.container-character-image {
+  align-items: center;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  border: 1px solid black;
+  float: left;
+}
+
+.current-king-img-container {
+  height: 512px;
+  width: 512px;
+}
+
+.container-fighters {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  align-items: center;
+  vertical-align: 20%;
+}
+
+.container-fighters label {
+  margin-bottom: 50px;
+}
+
+.container-fighters img {
+  width: 60px;
+}
+
+.container-fighters-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-fight-btn {
+  display: flex;
+  height: 50px;
+}
+
+.fight-btn {
+  height: 30px;
+}
