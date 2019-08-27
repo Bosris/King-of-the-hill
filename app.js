@@ -1,6 +1,12 @@
 let characterNameInput = document.querySelector("#character-name");
 let classSelected = document.querySelector("#class-selected");
 let characterSubmitBtn = document.querySelector("#character-submit");
+let fightBtn = document.querySelector(".fight-btn");
+let chatText = document.querySelector(".container-innerchat");
+let kingPicture = document.querySelector(".current-king-img-container");
+let currentKingName = document.querySelector(".current-king");
+let currentKingWins = document.querySelector(".current-king-wins");
+
 let iceWizardPic = "https://i.imgur.com/Vo9Ycuv.png";
 let archerPic = "https://i.imgur.com/B9RpRYo.png";
 let knightPic = "https://i.imgur.com/Nefioe9.png";
@@ -10,6 +16,7 @@ class Player {
     this.name = name;
     this.classPicked = classPicked;
     this.classPhoto;
+    this.wins = 0;
   }
 
   playerClassPic(data) {
@@ -29,19 +36,18 @@ function loadLocalStorage() {
   if (!localStorage.getItem("players")) {
     return;
   } else {
-    console.log("yes");
     let chooseFighterDiv = document.querySelector(".container-fighters");
 
     let allPlayers = JSON.parse(localStorage.getItem("players"));
     let allPlayersArray = allPlayers.players;
 
     for (let i = 0; i < allPlayersArray.length; i++) {
-      console.log("yesssir");
       chooseFighterDiv.innerHTML += `<div class="container-fighters-div">
         <img src="${allPlayersArray[i].classPhoto}"><p>${allPlayersArray[i].name}</p>
         <input class="fighter-selected" type="checkbox">
         </div>`;
     }
+    playerStatsDisplay();
     loadCheckBoxListener();
   }
 }
@@ -86,9 +92,9 @@ characterSubmitBtn.addEventListener("click", function() {
     let playerOBJ = {
       name: newPlayer.name,
       class: newPlayer.classPicked,
-      classPhoto: newPlayer.classPhoto
+      classPhoto: newPlayer.classPhoto,
+      wins: newPlayer.wins
     };
-    console.log(playerOBJ);
     let currentStoredPlayers = [];
     //get the current data and parse it so we can use it
     currentStoredPlayers = JSON.parse(localStorage.getItem("players"));
@@ -103,7 +109,8 @@ characterSubmitBtn.addEventListener("click", function() {
         {
           name: newPlayer.name,
           class: newPlayer.classPicked,
-          classPhoto: newPlayer.classPhoto
+          classPhoto: newPlayer.classPhoto,
+          wins: newPlayer.wins
         }
       ]
     };
@@ -115,6 +122,78 @@ characterSubmitBtn.addEventListener("click", function() {
     </div>`;
   loadCheckBoxListener();
 });
+
+fightBtn.addEventListener("click", function() {
+  let fighterOne = document.querySelectorAll(".fighter-selected:checked")[0]
+    .previousElementSibling.innerHTML;
+  let fighterTwo = document.querySelectorAll(".fighter-selected:checked")[1]
+    .previousElementSibling.innerHTML;
+  let currentStorage = JSON.parse(localStorage.getItem("players"));
+  let newPlayerObj = {
+    players: null
+  };
+
+  let chooseFighterDiv = document.querySelector(".container-fighters");
+
+  if (Math.random() < 0.5) {
+    console.log(fighterOne);
+    let newFilterStorage = currentStorage.players.filter(
+      element => element.name !== fighterTwo
+    );
+
+    //add wins to it
+    newFilterStorage.forEach(element => {
+      if (element.name === fighterOne) {
+        element.wins++;
+      }
+    });
+
+    newPlayerObj.players = newFilterStorage;
+    localStorage.setItem("players", JSON.stringify(newPlayerObj));
+    console.log(newFilterStorage);
+    chooseFighterDiv.innerHTML = "";
+    chatText.innerHTML += `<p>${fighterOne} has won the fight! ${fighterTwo} will be elimated</p>`;
+    loadLocalStorage();
+    playerStatsDisplay();
+  } else {
+    let newFilterStorage = currentStorage.players.filter(
+      element => element.name !== fighterOne
+    );
+
+    newFilterStorage.forEach(element => {
+      if (element.name === fighterTwo) {
+        element.wins++;
+      }
+    });
+
+    newPlayerObj.players = newFilterStorage;
+    localStorage.setItem("players", JSON.stringify(newPlayerObj));
+    chooseFighterDiv.innerHTML = "";
+    chatText.innerHTML += `<p>${fighterTwo} has won the fight! ${fighterOne} will be elimated</p>`;
+    loadLocalStorage();
+    playerStatsDisplay();
+  }
+});
+
+function playerStatsDisplay() {
+  let currentStorage = JSON.parse(localStorage.getItem("players"));
+  let mostWinsOBJ;
+  let counter = 0;
+
+  currentStorage.players.forEach(element => {
+    if (element.wins > counter) {
+      counter = element.wins;
+      mostWinsOBJ = element;
+    }
+  });
+
+  //display the data
+  kingPicture.innerHTML = `<img src=${mostWinsOBJ.classPhoto} /> `;
+  currentKingName.textContent = `Current King: ${mostWinsOBJ.name}`;
+  currentKingWins.textContent = `Wins: ${mostWinsOBJ.wins}`;
+  console.log(counter);
+  console.log(mostWinsOBJ.classPhoto);
+}
 
 loadLocalStorage();
 
